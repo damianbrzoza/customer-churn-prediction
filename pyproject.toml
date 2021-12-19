@@ -1,0 +1,14 @@
+[flake8]
+max-line-length = 100
+extend-ignore = "E203, E203, E231, D100, D401"
+doctests = true
+
+
+[tool.isort]
+line_length = 100
+multi_line_output = 3
+include_trailing_comma = "True"
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta:__legacy__"

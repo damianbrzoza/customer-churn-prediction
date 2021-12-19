@@ -1,0 +1,20 @@
+os: linux
+arch:
+  - arm64
+
+language: python
+python:
+  - 3.8
+
+cache:
+pip: true
+directories:
+  - "$HOME/.cache/pre-commit"
+
+before_install:
+  - pip install pipenv
+  - pip install pre-commit
+install:
+  - pipenv install
+script:
+  - pipenv pre-commit run --all-files
