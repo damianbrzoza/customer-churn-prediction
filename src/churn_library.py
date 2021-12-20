@@ -76,15 +76,6 @@ def perform_eda(df):
 
     df['Churn'] = df['Attrition_Flag'].apply(lambda val: 0 if val == "Existing Customer" else 1).astype('int64')
 
-    # plt.figure(figsize=(20,10)) 
-    # df['Customer_Age'].hist()
-
-    # plt.figure(figsize=(20,10)) 
-    # df.Marital_Status.value_counts('normalize').plot(kind='bar');
-
-    # plt.figure(figsize=(20,10)) 
-    # sns.distplot(df['Total_Trans_Ct']);
-
     # Get some info about correlation between our target and numerical values
 
     # df['Churn'] = df['Attrition_Flag'].apply(lambda val: 0 if val == "Existing Customer" else 1).astype('int64')
@@ -122,20 +113,20 @@ def perform_eda(df):
     plt.legend(loc="lower left", ncol=2)
     plt.ylabel("Attrited Customer/Gender")
     plt.xlabel("Proportion")
+
+
+    for gender, proportion in zip(genders.iterrows(), proportions.iterrows()):
+        print(gender)
+        print(proportion)
+    
+        # plt.text(x=(y_loc - proportion) + (proportion / 2),
+        #         y= n - 0.11,
+        #         s=f'{count}\n({round(proportion * 100, 1)}%)', 
+        #         color="black",
+        #         fontsize=12,
+        #         fontweight="bold")
+
     plt.show()
-
-
-    # for n, x in enumerate([*cross_tab.index.values]):
-    #     for (proportion, count, y_loc) in zip(cross_tab_prop.loc[x],
-    #                                         cross_tab.loc[x],
-    #                                         cross_tab_prop.loc[x].cumsum()):
-                    
-    #         plt.text(x=(y_loc - proportion) + (proportion / 2),
-    #                 y=n - 0.11,
-    #                 s=f'{count}\n({np.round(proportion * 100, 1)}%)', 
-    #                 color="black",
-    #                 fontsize=12,
-    #                 fontweight="bold")
     
     
 
