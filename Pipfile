@@ -9,6 +9,9 @@ submodule-template = {editable = true, path = "."}
 pandas = "*"
 seaborn = "*"
 heatmapz = "*"
+sklearn = "*"
+joblib = "*"
+shap = "*"
 
 [dev-packages]
 
