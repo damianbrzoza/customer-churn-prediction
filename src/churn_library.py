@@ -1,153 +1,69 @@
 """Module enable customer churn analysis."""
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
 
-from heatmap import corrplot
+from config import CAT_COLUMNS, QUANT_COLUMNS
+from src.plot_chart import (
+    plot_boxplot_with_category,
+    plot_categorical_proportion,
+    plot_correlations,
+    plot_quant_histogram,
+    plot_target_proportion,
+)
 
-def import_data(pth: str, verbose = False) -> pd.DataFrame:
+
+def import_data(pth: str, verbose=False) -> pd.DataFrame:
     """
     Returns dataframe for the csv found at pth.
-
     :param pth: a path to the csv
     :type pth: str
-    :return: pandas dataframe
+    :return: pandas dataframe with imported data
     :rtype: pd.DataFrame
     """
 
     df = pd.read_csv(pth, index_col=0)
 
-    cat_columns = [
-    'Attrition_Flag',
-    'Gender',
-    'Education_Level',
-    'Marital_Status',
-    'Income_Category',
-    'Card_Category'                
-    ] 
-
-    df[cat_columns] = df[cat_columns].astype('category')
+    df[CAT_COLUMNS] = df[CAT_COLUMNS].astype("category")
 
     if verbose:
-        print(df.head())   
-        print(df.info())    
-    
+        print(df.head())
+        print(df.info())
+
     return df
 
-def perform_eda(df):
-    '''
-    perform eda on df and save figures to images folder
-    input:  
-        df: pandas dataframe
 
-    output:
-        None
-    '''
-    df.head()
-    df.shape
-    df.isnull().sum()
-    df.describe()
+def perform_eda(df: pd.DataFrame) -> None:
+    """
+    Perform EDA on df and save figures to images folder.
 
-    cat_columns = [
-    'Attrition_Flag',
-    'Gender',
-    'Education_Level',
-    'Marital_Status',
-    'Income_Category',
-    'Card_Category'                
-    ]
+    :param df: pandas dataframe
+    :type df: pd.DataFrame
+    """
+    print(df.head())
+    print(df.shape)
+    print(df.isnull().sum())
+    print(df.describe())
 
-    quant_columns = [
-        'Customer_Age',
-        'Dependent_count', 
-        'Months_on_book',
-        'Total_Relationship_Count', 
-        'Months_Inactive_12_mon',
-        'Contacts_Count_12_mon', 
-        'Credit_Limit', 
-        'Total_Revolving_Bal',
-        'Avg_Open_To_Buy', 
-        'Total_Amt_Chng_Q4_Q1', 
-        'Total_Trans_Amt',
-        'Total_Trans_Ct', 
-        'Total_Ct_Chng_Q4_Q1', 
-        'Avg_Utilization_Ratio'
-    ]
-
-    df['Churn'] = df['Attrition_Flag'].apply(lambda val: 0 if val == "Existing Customer" else 1).astype('int64')
+    df["Churn"] = (
+        df["Attrition_Flag"]
+        .apply(lambda val: 0 if val == "Existing Customer" else 1)
+        .astype("int64")
+    )
 
     # Get some info about correlation between our target and numerical values
 
-    # df['Churn'] = df['Attrition_Flag'].apply(lambda val: 0 if val == "Existing Customer" else 1).astype('int64')
+    plot_correlations(df)
+    plot_target_proportion(df)  # Univariate, quantitative plot
 
-    # plt.figure(figsize=(10,10)) 
-    # corrplot(df.corr())
-    # plt.tight_layout()
-    # plt.gcf().subplots_adjust(bottom=0.15, left=0.2)
-    # plt.show()
+    plot_quant_histogram(df, column_name=QUANT_COLUMNS[0])  # Univariate, categorical plot
 
-    # plt.figure(figsize=(20,10)) 
-    # df['Attrition_Flag'].hist()
-    # plt.show()
+    for cat in CAT_COLUMNS[1:]:  # without Attrition_Flag
+        plot_categorical_proportion(df, column_name=cat)  # Bivariate plot
 
-    genders = (df
-               [['Attrition_Flag', 'Gender', 'CLIENTNUM']]
-               .groupby(['Gender', 'Attrition_Flag'])
-               .count()
-               .reset_index(level=1)
-               .pivot_table('CLIENTNUM', 'Gender', 'Attrition_Flag')
-               )
-
-    print(genders)
-    proportions = (genders
-                   .apply(lambda row: {'Attrited Customer': row['Attrited Customer']/sum(row), 
-                                       'Existing Customer':row['Existing Customer']/sum(row)}, 
-                                       axis=1)
-                   .apply(pd.Series))
-
-    proportions.plot(kind='barh', 
-                stacked=True, 
-                colormap='tab10', 
-                figsize=(10, 6))
-
-    plt.legend(loc="lower left", ncol=2)
-    plt.ylabel("Attrited Customer/Gender")
-    plt.xlabel("Proportion")
-
-
-    for gender, proportion in zip(genders.iterrows(), proportions.iterrows()):
-        print(gender)
-        print(proportion)
-    
-        # plt.text(x=(y_loc - proportion) + (proportion / 2),
-        #         y= n - 0.11,
-        #         s=f'{count}\n({round(proportion * 100, 1)}%)', 
-        #         color="black",
-        #         fontsize=12,
-        #         fontweight="bold")
-
-    plt.show()
-    
-    
-
-def encoder_helper(df, category_lst, response):
-    '''
-    helper function to turn each categorical column into a new column with
-    propotion of churn for each category - associated with cell 15 from the notebook
-
-    input:
-        df: pandas dataframe
-        category_lst: list of columns that contain categorical features
-        response: string of response name [optional argument that could be used for naming variables or index y column]
-
-    output:
-        df: pandas dataframe with new columns for
-    '''
-    pass
+    plot_boxplot_with_category(df, column_name=QUANT_COLUMNS[0])  # Bivariate plot
 
 
 def perform_feature_engineering(df, response):
-    '''
+    """
     input:
         df: pandas dataframe
         response: string of response name [optional argument that could be used for naming variables or index y column]
@@ -157,15 +73,15 @@ def perform_feature_engineering(df, response):
         X_test: X testing data
         y_train: y training data
         y_test: y testing data
-    '''
+    """
 
-def classification_report_image(y_train,
-                                y_test,
-                                y_train_preds_lr,
-                                y_train_preds_rf,
-                                y_test_preds_lr,
-                                y_test_preds_rf):
-    '''
+    return train_test_split(X, y, test_size=0.3, random_state=42)
+
+
+def classification_report_image(
+    y_train, y_test, y_train_preds_lr, y_train_preds_rf, y_test_preds_lr, y_test_preds_rf
+):
+    """
     produces classification report for training and testing results and stores report as image
     in images folder
     input:
@@ -178,12 +94,12 @@ def classification_report_image(y_train,
 
     output:
         None
-    '''
+    """
     pass
 
 
 def feature_importance_plot(model, X_data, output_pth):
-    '''
+    """
     creates and stores the feature importances in pth
     input:
         model: model object containing feature_importances_
@@ -192,11 +108,12 @@ def feature_importance_plot(model, X_data, output_pth):
 
     output:
         None
-    '''
+    """
     pass
 
+
 def train_models(X_train, X_test, y_train, y_test):
-    '''
+    """
     train, store model results: images + scores, and store models
     input:
         X_train: X training data
@@ -205,9 +122,10 @@ def train_models(X_train, X_test, y_train, y_test):
         y_test: y testing data
     output:
         None
-    '''
+    """
     pass
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     df = import_data("./data/bank_data.csv", verbose=False)
-    perform_eda(df)
+    # perform_eda(df)
