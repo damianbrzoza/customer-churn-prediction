@@ -8,10 +8,3 @@ format: ## Run pre-commit hooks to format code
 args ?= -vvv -cov tests
 test: ## Run tests
 	pytest $(args)
-
-doc: ## auto doc maker
-	rm docs -r || true
-	sphinx-quickstart docs --makefile --sep -p project_name -a DamianBrzoza -l en --ext-autodoc --ext-doctest \
-	--ext-todo --ext-coverage --ext-viewcode --ext-githubpages --ext-imgmath
-	sphinx-apidoc . -o docs/source
-	sphinx-build docs/source docs/ -b html

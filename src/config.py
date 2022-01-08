@@ -1,3 +1,5 @@
+"Config file."
+
 CAT_COLUMNS = [
     "Attrition_Flag",  # target
     "Gender",
