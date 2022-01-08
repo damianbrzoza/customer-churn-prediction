@@ -203,7 +203,7 @@ if __name__ == "__main__":
     rfc_model = joblib.load("./models/rfc_model.pkl")
     logistic_model = joblib.load("./models/logistic_model.pkl")
 
-    compare_roc_curve(models=[rfc_model, logistic_model], X_test=X_test, y_test=y_test)
+    compare_roc_curve(list_of_models=[rfc_model, logistic_model], X_test=X_test, y_test=y_test)
     show_features_importance(rfc_model, X_test)
     plot_classifier_summary_as_image(
         rfc_model, X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test
