@@ -1,4 +1,4 @@
-"Some helper functions to plotting."
+"""Some helper functions to plotting."""
 from typing import List
 
 import matplotlib.pyplot as plt

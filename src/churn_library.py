@@ -1,116 +1,17 @@
 """Module enable customer churn analysis."""
-from copy import deepcopy
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List
 
 import joblib
 import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
 from sklearn.base import ClassifierMixin
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import RocCurveDisplay, classification_report
-from sklearn.model_selection import GridSearchCV, train_test_split
-from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import GridSearchCV
 
-from config import CAT_COLUMNS, QUANT_COLUMNS
-from src.plot_chart import (
-    compare_roc_curve,
-    plot_boxplot_with_category,
-    plot_categorical_proportion,
-    plot_classifier_summary_as_image,
-    plot_correlations,
-    plot_quant_histogram,
-    plot_target_proportion,
-    show_features_importance,
-)
-
-
-def import_data(pth: str, verbose: bool = False) -> pd.DataFrame:
-    """
-    Return dataframe for the csv found at pth.
-
-    :param pth: a path to the csv
-    :type pth: str
-    :return: pandas dataframe with imported data
-    :rtype: pd.DataFrame
-    """
-    df = pd.read_csv(pth, index_col=0)
-
-    df[CAT_COLUMNS] = df[CAT_COLUMNS].astype("category")
-
-    if verbose:
-        print(df.head())
-        print(df.info())
-
-    return df
-
-
-def perform_eda(df: pd.DataFrame) -> None:
-    """
-    Perform EDA on df and save figures to images folder.
-
-    :param df: pandas dataframe
-    :type df: pd.DataFrame
-    """
-    data = deepcopy(df)
-
-    print(data.head())
-    print(data.shape)
-    print(data.isnull().sum())
-    print(data.describe())
-
-    data["Churn"] = (
-        data["Attrition_Flag"]
-        .apply(lambda val: 0 if val == "Existing Customer" else 1)
-        .astype("int64")
-    )
-
-    # Get some info about correlation between our target and numerical values
-
-    plot_correlations(data)
-    plot_target_proportion(data)  # Univariate, quantitative plot
-
-    plot_quant_histogram(data, column_name=QUANT_COLUMNS[0])  # Univariate, categorical plot
-
-    for cat in CAT_COLUMNS[1:]:  # without Attrition_Flag
-        plot_categorical_proportion(data, column_name=cat)  # Bivariate plot
-
-    plot_boxplot_with_category(data, column_name=QUANT_COLUMNS[0])  # Bivariate plot
-
-
-def perform_feature_engineering(
-    df: pd.DataFrame,
-) -> Tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series]:
-    """
-    Enable efficient training on that data. Return splitted dataset.
-
-    :param df: data
-    :type df: pd.DataFrame
-    :return: X_train, X_test, y_train, y_test
-    :rtype: Tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series]
-    """
-    df.drop(columns="CLIENTNUM", inplace=True)  # not store any valuable information
-
-    df[QUANT_COLUMNS] = StandardScaler().fit_transform(
-        df[QUANT_COLUMNS]
-    )  # apply for logistic regression
-
-    df[["Education_Level", "Marital_Status", "Income_Category"]] = df[
-        ["Education_Level", "Marital_Status", "Income_Category"]
-    ].applymap(
-        lambda x: np.nan if x == "Unknown" else x
-    )  # correct form for one-hot encoding
-
-    df = pd.get_dummies(df[CAT_COLUMNS[1:]]).join(df).drop(columns=df[CAT_COLUMNS[1:]])
-
-    return train_test_split(
-        df.drop(columns="Attrition_Flag"),
-        df["Attrition_Flag"],
-        test_size=0.3,
-        random_state=42,
-        stratify=df["Attrition_Flag"],
-    )
+from plot import compare_roc_curve, plot_classifier_summary_as_image, show_features_importance
+from src.dataset import CustomerDataset
 
 
 def train_model(
@@ -121,6 +22,7 @@ def train_model(
     classifier: ClassifierMixin,
     classifier_name: str,
     param_grid: Dict[str, List[Any]],
+    verbose: bool = True,
 ) -> ClassifierMixin:
     """
     Train, store model results: images + scores, and store models.
@@ -139,6 +41,8 @@ def train_model(
     :type classifier_name: str
     :param param_grid: parameteres to be checked for given classifier
     :type param_grid: Dict[str, List[Any]]
+    :param verbose: verbose or not?, defaults to False
+    :type verbose: bool, optional
     :return: trained model
     :rtype: ClassifierMixin
     """
@@ -151,11 +55,12 @@ def train_model(
     y_test_preds = classifier.best_estimator_.predict(X_test)
 
     # scores
-    print(f"{classifier_name} results")
-    print("test results")
-    print(classification_report(y_test, y_test_preds))
-    print("train results")
-    print(classification_report(y_train, y_train_preds))
+    if verbose:
+        print(f"{classifier_name} results")
+        print("test results")
+        print(classification_report(y_test, y_test_preds))
+        print("train results")
+        print(classification_report(y_train, y_train_preds))
 
     # plot
     RocCurveDisplay.from_estimator(estimator=classifier.best_estimator_, X=X_test, y=y_test)
@@ -167,10 +72,11 @@ def train_model(
     return classifier
 
 
-if __name__ == "__main__":
-    df = import_data("./data/bank_data.csv", verbose=False)
-    perform_eda(df)
-    X_train, X_test, y_train, y_test = perform_feature_engineering(df)
+def main() -> None:
+    """Perform all available operation."""
+    customer_dataset = CustomerDataset("./data/bank_data.csv", verbose=False)
+    customer_dataset.perform_eda()
+    X_train, X_test, y_train, y_test = customer_dataset.perform_feature_engineering()
 
     param_grid_rfc_model: Dict[str, List[Any]] = {
         "n_estimators": [200, 500],
@@ -208,3 +114,7 @@ if __name__ == "__main__":
     plot_classifier_summary_as_image(
         rfc_model, X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test
     )
+
+
+if __name__ == "__main__":
+    main()

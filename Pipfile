@@ -12,6 +12,7 @@ heatmapz = "*"
 sklearn = "*"
 joblib = "*"
 shap = "*"
+pytest = "*"
 
 [dev-packages]
 
