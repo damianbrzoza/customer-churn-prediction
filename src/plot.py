@@ -110,7 +110,7 @@ def plot_quant_histogram(df: pd.DataFrame, column_name: str) -> None:
 
 
 def compare_roc_curve(
-    list_of_models: List[ClassifierMixin], X_test: pd.DataFrame, y_test: pd.DataFrame
+    list_of_models: List[ClassifierMixin], X_test: pd.DataFrame, y_test: pd.Series
 ) -> None:
     """
     Compare roc curve for given models.
@@ -120,7 +120,7 @@ def compare_roc_curve(
     :param X_test: test features
     :type X_test: pd.DataFrame
     :param y_test: test labels
-    :type y_test: pd.DataFrame
+    :type y_test: pd.Series
     """
     first_plot = RocCurveDisplay.from_estimator(
         estimator=list_of_models[0], X=X_test, y=y_test, alpha=0.8
