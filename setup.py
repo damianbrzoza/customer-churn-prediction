@@ -2,7 +2,7 @@
 from setuptools import find_packages, setup
 
 setup(
-    name="customer_churn_prediction",
+    name="ccp",
     version="0.0.0",
     author="Damian Brzoza",
     install_requires=[],

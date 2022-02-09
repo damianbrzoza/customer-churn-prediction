@@ -12,6 +12,7 @@ sklearn = "*"
 joblib = "*"
 shap = "*"
 pytest = "*"
+project-name = {editable = true, path = "."}
 
 [dev-packages]
 

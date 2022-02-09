@@ -1,5 +1,7 @@
 import logging
+
 from src.dataset import CustomerDataset
+
 
 def test_import():
     """Test data import - this example is completed for you to assist with the other test functions."""

@@ -18,7 +18,7 @@ def plot_correlations(df: pd.DataFrame) -> None:
     :param df: data
     :type df: pd.DataFrame
     """
-    plt.figure(figsize=(10, 10), num = 'Correlations')
+    plt.figure(figsize=(10, 10), num="Correlations")
     corrplot(df.corr())
     plt.tight_layout()
     plt.gcf().subplots_adjust(bottom=0.15, left=0.2)
@@ -32,8 +32,8 @@ def plot_target_proportion(df: pd.DataFrame) -> None:
     :param df: data
     :type df: pd.DataFrame
     """
-    plt.figure(figsize=(20, 10), num = 'target_proportion')
-    plt.title('target_proportion')
+    plt.figure(figsize=(20, 10), num="target_proportion")
+    plt.title("target_proportion")
     df["Attrition_Flag"].hist()
     plt.show()
 
@@ -157,7 +157,7 @@ def show_features_importance(model: ClassifierMixin, X_test: pd.DataFrame) -> No
     names = [X_test.columns[i] for i in indices]
 
     # Create plot
-    plt.figure(figsize=(20, 5), num = 'Feature Importance')
+    plt.figure(figsize=(20, 5), num="Feature Importance")
 
     # Create plot title
     plt.title("Feature Importance")

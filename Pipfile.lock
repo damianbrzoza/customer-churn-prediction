@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "31e2998d09c4e0f5d29b2bf5f4e5a624e10d2166a7d324c508465c135b33d320"
+            "sha256": "28891eb67522b3cfa0f8bbc338a47a666cc78782542f67938770f8631d1cfa98"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -397,6 +397,10 @@
             ],
             "index": "pypi",
             "version": "==2.17.0"
+        },
+        "project-name": {
+            "editable": true,
+            "path": "."
         },
         "py": {
             "hashes": [
