@@ -5,7 +5,6 @@ name = "pypi"
 
 [packages]
 pre-commit = "*"
-submodule-template = {editable = true, path = "."}
 pandas = "*"
 seaborn = "*"
 heatmapz = "*"

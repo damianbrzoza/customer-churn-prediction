@@ -2,6 +2,13 @@
 
 - Project **Predict Customer Churn** of ML DevOps Engineer Nanodegree Udacity
 
+# Usage
+
+To run project use:
+```
+python src/churn_library.py
+```
+
 ## Using Dependencies
 
 - git-lfs - you should have installed [git-lfs](https://git-lfs.github.com/) to download

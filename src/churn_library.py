@@ -87,24 +87,24 @@ def main() -> None:
 
     param_grid_logistic_model = {"C": [0.001, 0.01, 0.1, 1, 10, 100, 1000]}
 
-    rfc_model = train_model(
-        X_train=X_train,
-        X_test=X_test,
-        y_train=y_train,
-        y_test=y_test,
-        classifier=RandomForestClassifier(random_state=42),
-        classifier_name="rfc_model",
-        param_grid=param_grid_rfc_model,
-    )
-    logistic_model = train_model(
-        X_train=X_train,
-        X_test=X_test,
-        y_train=y_train,
-        y_test=y_test,
-        classifier=LogisticRegression(),
-        classifier_name="logistic_model",
-        param_grid=param_grid_logistic_model,
-    )
+    # rfc_model = train_model(
+    #     X_train=X_train,
+    #     X_test=X_test,
+    #     y_train=y_train,
+    #     y_test=y_test,
+    #     classifier=RandomForestClassifier(random_state=42),
+    #     classifier_name="rfc_model",
+    #     param_grid=param_grid_rfc_model,
+    # )
+    # logistic_model = train_model(
+    #     X_train=X_train,
+    #     X_test=X_test,
+    #     y_train=y_train,
+    #     y_test=y_test,
+    #     classifier=LogisticRegression(),
+    #     classifier_name="logistic_model",
+    #     param_grid=param_grid_logistic_model,
+    # )
 
     rfc_model = joblib.load("./models/rfc_model.pkl")
     logistic_model = joblib.load("./models/logistic_model.pkl")

@@ -2,7 +2,7 @@
 from setuptools import find_packages, setup
 
 setup(
-    name="project_name",
+    name="customer_churn_prediction",
     version="0.0.0",
     author="Damian Brzoza",
     install_requires=[],
