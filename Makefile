@@ -12,3 +12,6 @@ format: ## Run pre-commit hooks to format code
 args ?= -vvv -cov tests
 test: ## Run tests
 	pytest $(args)
+
+test_with_cov: ## Run tests with coverage report in html
+	pytest tests --cov=src --cov-report html:coverage/

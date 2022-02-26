@@ -13,6 +13,7 @@ joblib = "*"
 shap = "*"
 pytest = "*"
 project-name = {editable = true, path = "."}
+pytest-cov = "*"
 
 [dev-packages]
 

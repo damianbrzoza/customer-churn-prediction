@@ -1,4 +1,8 @@
-"""Module enable customer churn analysis."""
+"""
+Module enable processing data for customer churn analysis.
+
+created by Damian Brzoza 26.02.2022
+"""
 from copy import deepcopy
 from typing import Tuple
 
@@ -7,8 +11,8 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
-from config import CAT_COLUMNS, QUANT_COLUMNS
-from plot import (
+from src.config import CAT_COLUMNS, QUANT_COLUMNS
+from src.plot import (
     plot_boxplot_with_category,
     plot_categorical_proportion,
     plot_correlations,
@@ -69,7 +73,7 @@ class CustomerDataset:
         """
         Enable efficient training on that data. Return splitted dataset.
 
-        :return: X_train, X_test, y_train, y_test
+        :return: X_train, X_test, y_train, y_testo
         :rtype: Tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series]
         """
         df = deepcopy(self.df)
@@ -96,7 +100,7 @@ class CustomerDataset:
         )
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     customer_dataset = CustomerDataset("./data/bank_data.csv", verbose=False)
     customer_dataset.perform_eda()
     X_train, X_test, y_train, y_test = customer_dataset.perform_feature_engineering()

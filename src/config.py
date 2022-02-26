@@ -1,4 +1,8 @@
-"Config file."
+"""
+Config file.
+
+created by Damian Brzoza 26.02.2022
+"""
 
 CAT_COLUMNS = [
     "Attrition_Flag",  # target

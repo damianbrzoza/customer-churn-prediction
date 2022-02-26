@@ -1,4 +1,9 @@
-"""Some helper functions to plotting."""
+"""
+Some helper functions to plotting.
+
+created by Damian Brzoza 26.02.2022
+"""
+
 from typing import List
 
 import matplotlib.pyplot as plt
@@ -20,7 +25,6 @@ def plot_correlations(df: pd.DataFrame) -> None:
     """
     plt.figure(figsize=(10, 10), num="Correlations")
     corrplot(df.corr())
-    plt.tight_layout()
     plt.gcf().subplots_adjust(bottom=0.15, left=0.2)
     plt.show()
 

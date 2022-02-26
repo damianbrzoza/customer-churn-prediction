@@ -39,5 +39,15 @@ Use `make` to run commands
 
 - `make help` - show help
 - `make format` - format code
+- `make initialize` - ensure that all files have been downloaded and pre-commit is
+  installed
 - `make test` - run tests
   - `args="--lf" make test` - run pytest tests with different arguments
+
+For testing purposes you could use function from Makefile:
+
+```
+make test_with_cov
+```
+
+In coverege folder you can find coverage report.
